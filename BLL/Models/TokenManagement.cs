@@ -6,7 +6,7 @@ using System.Text;
 namespace BLL.Models
 {
     [JsonObject("tokenManagement")]
-    class TokenManagement
+    public class TokenManagement
     {
         [JsonProperty("secret")]
         public string Secret { get; set; }
