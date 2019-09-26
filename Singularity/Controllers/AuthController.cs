@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BLL.Interfaces;
 using BLL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,14 +14,26 @@ namespace Singularity.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly IAuthService _authService;
+
+        public AuthController(IAuthService authService)
+        {
+            _authService = authService;
+        }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost, Route("token")]
         public async Task<ActionResult> Get([FromBody] TokenRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid request");
+            }
+
+            string token;
+            if(_authService.IsAuthenticate(request, out token))
+            {
+                return Ok(token);
             }
 
             return Ok();
