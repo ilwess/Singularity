@@ -66,7 +66,8 @@ namespace Singularity
                 app.UseHsts();
             }
 
-            
+            app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
