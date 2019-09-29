@@ -30,13 +30,20 @@ namespace Singularity.Controllers
                 return BadRequest("Invalid request");
             }
 
-            string token;
+            string token = string.Empty;
             if(_authService.IsAuthenticate(request, out token))
             {
                 return Ok(token);
             }
 
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet, Route("test")]
+        public string Test()
+        {
+            return "eee";
         }
     }
 }

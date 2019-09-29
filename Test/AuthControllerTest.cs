@@ -13,7 +13,6 @@ namespace Test
         [TestMethod]
         public void IsTokenCreated()
         {
-            AuthController authController = new AuthController();
             TokenRequest request = new TokenRequest();
             string token = string.Empty;
         }

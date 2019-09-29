@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BLL.Interfaces;
 using BLL.Models;
 using BLL.Services;
+using Domain.EFContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,7 +54,8 @@ namespace Singularity
                     ValidateAudience = true,
                 };
             });
-
+            services.AddSingleton<SingularityContext, SingularityContext>();
+            services.AddScoped<IUserManagementService, UserManagementService>();
             services.AddScoped<IAuthService, TokenAuthService>();
         }
 
