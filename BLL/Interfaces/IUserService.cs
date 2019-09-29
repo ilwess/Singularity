@@ -13,8 +13,8 @@ namespace BLL.Interfaces
     {
         Task CreateUserAsync(UserDTO user);
         Task CommitAsync();
-        Task<IEnumerable<UserDTO>> GetAllUsersAsync();
-        Task<IEnumerable<UserDTO>> GetUsersAsync(
+        IEnumerable<UserDTO> GetAllUsers();
+        IEnumerable<UserDTO> GetUsers(
             Expression<Func<User, bool>> predicate);
         Task<UserDTO> GetUserByIdAsync(int id);
         Task DeleteUserAsync(UserDTO user);

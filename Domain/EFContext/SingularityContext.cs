@@ -18,6 +18,8 @@ namespace Domain.EFContext
         
         public DbSet<Video> Videos { get; set; }
 
+        public DbSet<ChangedName> AllChanges { get; set; }
+
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

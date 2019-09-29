@@ -13,15 +13,17 @@ namespace Domain.Concrete
     {
         private readonly SingularityContext _db;
 
-        public IRepository<User> userRepo;
+        private IRepository<User> userRepo;
 
-        public IRepository<Message> msgRepo;
+        private IRepository<Message> msgRepo;
 
-        public IRepository<Image> imgRepo;
+        private IRepository<Image> imgRepo;
 
-        public IRepository<Audio> audioRepo;
+        private IRepository<Audio> audioRepo;
 
-        public IRepository<Video> videoRepo;
+        private IRepository<Video> videoRepo;
+
+        private IRepository<ChangedName> allChanges;
 
         public UnitOfWork(SingularityContext db)
         {
@@ -30,34 +32,48 @@ namespace Domain.Concrete
         public IRepository<User> UserRepo {
             get
             {
-                return userRepo ?? new Repository<User>(_db);
+                return userRepo ??
+                    new Repository<User>(_db);
             } }
         public IRepository<Message> MsgRepo
         {
             get
             {
-                return msgRepo ?? new Repository<Message>(_db);
+                return msgRepo ??
+                    new Repository<Message>(_db);
             }
         }
         public IRepository<Image> ImgRepo
         {
             get
             {
-                return imgRepo ?? new Repository<Image>(_db);
+                return imgRepo ??
+                    new Repository<Image>(_db);
             }
         }
         public IRepository<Audio> AudioRepo
         {
             get
             {
-                return audioRepo ?? new Repository<Audio>(_db);
+                return audioRepo ??
+                    new Repository<Audio>(_db);
             }
         }
         public IRepository<Video> VideoRepo
         {
             get
             {
-                return videoRepo ?? new Repository<Video>(_db);
+                return videoRepo ??
+                    new Repository<Video>(_db);
+            }
+        }
+
+        public IRepository<ChangedName> AllChanges
+        {
+            get
+            {
+                return allChanges ??
+                    new Repository<ChangedName>(_db);
             }
         }
 

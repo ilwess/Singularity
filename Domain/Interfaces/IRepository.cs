@@ -10,8 +10,8 @@ namespace Domain.Interfaces
     public interface IRepository<TEntity> 
         where TEntity : class, IEntity
     {
-        IQueryable<TEntity> GetAllAsync();
-        IQueryable<TEntity> GetAsync(
+        IQueryable<TEntity> GetAll();
+        IQueryable<TEntity> Get(
             Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> GetById(int id);
         Task Create(TEntity entity);

@@ -17,7 +17,8 @@ namespace Domain.Interfaces
         IRepository<Audio> AudioRepo { get; }
 
         IRepository<Video> VideoRepo { get; }
-
+        
+        IRepository<ChangedName> AllChanges { get; }
         Task CommitAsync();
     }
 }

@@ -32,13 +32,13 @@ namespace Domain.Repositories
             _db.Set<TEntity>().Remove(entity);
         }
 
-        public IQueryable<TEntity> GetAllAsync()
+        public IQueryable<TEntity> GetAll()
         {
             return _db.Set<TEntity>()
                 .AsNoTracking();
         }
 
-        public IQueryable<TEntity> GetAsync(
+        public IQueryable<TEntity> Get(
             Expression<Func<TEntity, bool>> predicate)
         {
             return _db.Set<TEntity>().Where(predicate);
