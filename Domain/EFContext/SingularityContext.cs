@@ -37,6 +37,10 @@ namespace Domain.EFContext
             modelBuilder.Entity<User>()
                 .HasMany(u => u.BlackList);
 
+            modelBuilder.Entity<ChangedName>()
+                .HasOne(c => c.Changer)
+                .WithMany(u => u.Changes);
+
             modelBuilder.Entity<Message>()
                 .HasMany(m => m.ImageLinks);
             base.OnModelCreating(modelBuilder);
