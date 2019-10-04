@@ -26,6 +26,8 @@ namespace BLL.Interfaces
         Task AddToContact(UserDTO user, UserDTO newContact);
         Task DeleteFromContact(
             UserDTO user, UserDTO contactToDelete);
+        Task SetAvaAsync(
+            UserDTO userDTO, ImageDTO ava);
 
     }
 }

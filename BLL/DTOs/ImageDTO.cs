@@ -12,5 +12,8 @@ namespace BLL.DTOs
 
         [JsonProperty("link")]
         public string Link { get; set; }
+
+        [JsonProperty("messageDTO")]
+        public MessageDTO message { get; set; }
     }
 }

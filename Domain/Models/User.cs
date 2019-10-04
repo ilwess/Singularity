@@ -42,5 +42,8 @@ namespace Domain.Models
 
         [JsonProperty("changes")]
         public ICollection<ChangedName> Changes { get; set; }
+
+        [JsonProperty("messages")]
+        public ICollection<Message> Messages { get; set; }
     }
 }

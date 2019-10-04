@@ -57,6 +57,8 @@ namespace Singularity
             services.AddSingleton<SingularityContext, SingularityContext>();
             services.AddScoped<IUserManagementService, UserManagementService>();
             services.AddScoped<IAuthService, TokenAuthService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IMessageService, MessageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

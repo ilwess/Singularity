@@ -32,5 +32,7 @@ namespace Domain.Models
 
         [JsonProperty("videos")]
         public ICollection<Video> VideoLink { get; set; }
+
+        public DateTime DateOfCreation { get; set; }
     }
 }

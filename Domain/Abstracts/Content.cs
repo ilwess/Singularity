@@ -1,4 +1,5 @@
 ﻿using Domain.Interfaces;
+using Domain.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,7 @@ namespace Domain.Abstracts
 
         [JsonProperty("link")]
         public string Link { get; set; }
+        [JsonProperty("message")]
+        public Message message { get; set; }
     }
 }
