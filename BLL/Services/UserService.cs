@@ -3,6 +3,7 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,7 +129,9 @@ namespace BLL.Services
 
         public async Task<UserDTO> GetUserByIdAsync(int id)
         {
-            var user = await _db.UserRepo.GetById(id);
+            var user = await _db.UserRepo
+                .GetById(id);
+
             if (user != null)
             {
                 return _mapper.Map<User, UserDTO>(user);
@@ -140,7 +143,13 @@ namespace BLL.Services
         public IEnumerable<UserDTO> GetUsers(
             Expression<Func<User, bool>> predicate)
         {
-            var users = _db.UserRepo.Get(predicate);
+            var users = _db.UserRepo
+                .Get(predicate)
+                .Include(u => u.Changes)
+                .Include(u => u.Contacts)
+                .Include(u => u.Messages)
+                .Include(u => u.BlackList)
+                .Include(u => u.Ava);
             return _mapper.Map<
                 IEnumerable<User>,
                 IEnumerable<UserDTO>>(users.ToList());
