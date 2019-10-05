@@ -56,7 +56,7 @@ namespace Singularity.Controllers
             return Ok(users);
         }
 
-        [HttpPut, Route("contact/add")]
+        [HttpPatch, Route("contact/add")]
         public async Task<IActionResult> AddToContacts(
             UserDTO user, UserDTO newContact)
         {
@@ -64,7 +64,7 @@ namespace Singularity.Controllers
             return Ok();
         }
 
-        [HttpPut, Route("contact/del")]
+        [HttpPatch, Route("contact/del")]
         public async Task<IActionResult> DelFromCotacts(
             UserDTO user, UserDTO contactToDel)
         {
@@ -72,5 +72,34 @@ namespace Singularity.Controllers
                 user, contactToDel);
             return Ok();
         }
+
+        [HttpPatch, Route("blacklist/add")]
+        public async Task<IActionResult> AddToBlacklist(
+            UserDTO user, UserDTO blockable)
+        {
+            await _userService.BlockUser(
+                user, blockable);
+            return Ok();
+        }
+
+        [HttpPatch, Route("blacklist/del")]
+        public async Task<IActionResult> DelFromBlacklist(
+            UserDTO user, UserDTO blocked)
+        {
+            await _userService.UnblockUser(
+                user, blocked);
+            return Ok();
+        }
+
+        [HttpPatch, Route("change")]
+        public async Task<IActionResult> ChangeContactName
+            (UserDTO user, string newName, UserDTO contact)
+        {
+            await _userService.ChangeNameOfContact(
+                user, newName, contact);
+            return Ok();
+        }
+
+
     }
 }
