@@ -48,5 +48,12 @@ namespace Singularity.Controllers
                 _userService.GetUserByIdAsync(id);
             return Ok(user);
         }
+
+        [HttpGet, Route("all")]
+        public IActionResult Get()
+        {
+            var users = _userService.GetAllUsers();
+            return users;
+        }
     }
 }
