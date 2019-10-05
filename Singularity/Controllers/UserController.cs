@@ -53,7 +53,24 @@ namespace Singularity.Controllers
         public IActionResult Get()
         {
             var users = _userService.GetAllUsers();
-            return users;
+            return Ok(users);
+        }
+
+        [HttpPut, Route("contact/add")]
+        public async Task<IActionResult> AddToContacts(
+            UserDTO user, UserDTO newContact)
+        {
+            await _userService.AddToContact(user, newContact);
+            return Ok();
+        }
+
+        [HttpPut, Route("contact/del")]
+        public async Task<IActionResult> DelFromCotacts(
+            UserDTO user, UserDTO contactToDel)
+        {
+            await _userService.DeleteFromContact(
+                user, contactToDel);
+            return Ok();
         }
     }
 }
