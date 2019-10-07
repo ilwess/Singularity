@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Domain.Models
@@ -39,8 +40,8 @@ namespace Domain.Models
         [JsonProperty("ava")]
         public Image Ava { get; set; }
 
-        [JsonProperty("contacats")]
-        public ICollection<User> Contacts { get; set; }
+        [JsonProperty("contacts")]
+        public ICollection<Contact> Contacts { get; set; }
 
         [JsonProperty("blackList")]
         public ICollection<User> BlackList { get; set; }
@@ -50,5 +51,12 @@ namespace Domain.Models
 
         [JsonProperty("messages")]
         public ICollection<Message> Messages { get; set; }
+    }
+
+    [JsonObject("contact")]
+    public class Contact
+    { 
+        public User Owner { get; set; }
+        public User UserContact { get; set; }
     }
 }

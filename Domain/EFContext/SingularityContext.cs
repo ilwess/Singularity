@@ -20,6 +20,8 @@ namespace Domain.EFContext
 
         public DbSet<ChangedName> AllChanges { get; set; }
 
+        
+
         public SingularityContext()
         {
             Database.EnsureCreated();
@@ -31,6 +33,8 @@ namespace Domain.EFContext
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Contact>()
+                .HasKey(c => new { c.Owner, c.UserContact });
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
@@ -41,8 +45,6 @@ namespace Domain.EFContext
                 .HasIndex(u => u.Login)
                 .IsUnique();
 
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Contacts);
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.BlackList);
@@ -59,6 +61,8 @@ namespace Domain.EFContext
                 .HasMany(m => m.ImageLinks)
                 .WithOne(i => i.message);
             base.OnModelCreating(modelBuilder);
+
+           
         }
     }
 }

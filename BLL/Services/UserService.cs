@@ -33,11 +33,19 @@ namespace BLL.Services
                 _db.UserRepo.GetById(newContactDTOId);
 
             if (user != null &&
-               newContact != null &&
-               !user.Contacts.Contains(newContact))
+               newContact != null)
             {
-                user.BlackList.Add(newContact);
-                await _db.UserRepo.Update(user);
+                if (user.Contacts
+                    .Any(c => c.UserContact.Email == newContact.Email))
+                {
+                    Contact contact = new Contact()
+                    {
+                        Owner = user,
+                        UserContact = newContact,
+                    };
+                    user.Contacts.Add(contact);
+                    await _db.UserRepo.Update(user);
+                }
             }
 
             await CommitAsync();
@@ -104,10 +112,17 @@ namespace BLL.Services
             User contactToDel =
                 await _db.UserRepo.GetById(contactToDeleteId);
 
-            if (user.Contacts.Contains(contactToDel))
+            if (user != null &&
+                contactToDel != null)
             {
-                user.Contacts.Remove(contactToDel);
-                await _db.UserRepo.Update(user);
+                Contact contact = user.Contacts
+                    .FirstOrDefault(c => c.UserContact.Email ==
+                    contactToDel.Email);
+                if (contact != null)
+                {
+                    user.Contacts.Remove(contact);
+                    await _db.UserRepo.Update(user);
+                }
             }
             await CommitAsync();
         }
