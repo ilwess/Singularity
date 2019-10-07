@@ -15,8 +15,8 @@ namespace Domain.Models
         [JsonProperty("sender")]
         public User Sender { get; set; }
 
-        [JsonProperty("recievers")]
-        public ICollection<User> Recievers { get; set; }
+        [JsonProperty("reciever")]
+        public User Reciever { get; set; }
 
         [JsonProperty("text")]
         public string Text { get; set; }

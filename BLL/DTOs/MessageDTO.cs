@@ -13,8 +13,8 @@ namespace BLL.DTOs
         [JsonProperty("sender")]
         public UserDTO Sender { get; set; }
 
-        [JsonProperty("recievers")]
-        public ICollection<UserDTO> Recievers { get; set; }
+        [JsonProperty("reciever")]
+        public UserDTO Reciever { get; set; }
 
         [JsonProperty("text")]
         public string Text { get; set; }

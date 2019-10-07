@@ -19,15 +19,15 @@ namespace BLL.Interfaces
         Task<UserDTO> GetUserByIdAsync(int id);
         Task DeleteUserAsync(UserDTO user);
         Task ChangeNameOfContact(
-            UserDTO changer, string name, UserDTO changable);
+            int changerId, string name, int changableId);
         Task UpdateUser(UserDTO user);
-        Task BlockUser(UserDTO blocker, UserDTO blockable);
-        Task UnblockUser(UserDTO blocker, UserDTO blocked);
-        Task AddToContact(UserDTO user, UserDTO newContact);
+        Task BlockUser(int blockerId, int blockableId);
+        Task UnblockUser(int blockerId, int blockedId);
+        Task AddToContact(int userId, int newContactId);
         Task DeleteFromContact(
-            UserDTO user, UserDTO contactToDelete);
+            int userId, int contactToDeleteId);
         Task SetAvaAsync(
-            UserDTO userDTO, ImageDTO ava);
+            int userDTOId, ImageDTO ava);
 
     }
 }

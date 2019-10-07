@@ -20,7 +20,15 @@ namespace Domain.EFContext
 
         public DbSet<ChangedName> AllChanges { get; set; }
 
-        
+        public SingularityContext()
+        {
+            Database.EnsureCreated();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Singularity;Trusted_Connection=True;");
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -43,9 +51,9 @@ namespace Domain.EFContext
                 .HasMany(u => u.Messages)
                 .WithOne(m => m.Sender);
 
-            modelBuilder.Entity<ChangedName>()
-                .HasOne(c => c.Changer)
-                .WithMany(u => u.Changes);
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Changes)
+                .WithOne(c => c.Changer);
 
             modelBuilder.Entity<Message>()
                 .HasMany(m => m.ImageLinks)

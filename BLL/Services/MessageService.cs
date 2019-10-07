@@ -40,14 +40,14 @@ namespace BLL.Services
                 .GetById(removerDTO.Id);
             if(msg != null || remover != null)
             {
-                if(msg.Sender == remover)
+                if(msg.Sender.Email == remover.Email)
                 {
                     await _db.MsgRepo.Delete(msg.Id);
                     return;
                 }
-                if (msg.Recievers.Contains(remover))
+                if (msg.Reciever.Email == remover.Email)
                 {
-                    msg.Recievers.Remove(remover);
+                    msg.Reciever = null;
                     await _db.CommitAsync();
                 }
             }

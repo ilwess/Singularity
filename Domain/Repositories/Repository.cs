@@ -49,6 +49,7 @@ namespace Domain.Repositories
         {
             return await _db.Set<TEntity>()
                 .AsNoTracking()
+                .Include("Contacts")
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 

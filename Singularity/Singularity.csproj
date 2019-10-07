@@ -28,6 +28,7 @@
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\audios\" />
     <Folder Include="wwwroot\videos\" />
+    <Folder Include="Hubs\" />
   </ItemGroup>
 
 </Project>

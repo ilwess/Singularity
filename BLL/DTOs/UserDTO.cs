@@ -14,23 +14,18 @@ namespace BLL.DTOs
         [JsonProperty("token")]
         public string Token { get; set; }
 
-        [Required]
         [JsonProperty("email")]
         public string Email { get; set; }
 
-        [Required]
         [JsonProperty("password")]
         public string Password { get; set; }
 
-        [Required]
         [JsonProperty("phone")]
         public string Phone { get; set; }
 
-        [Required]
         [JsonProperty("login")]
         public string Login { get; set; }
 
-        [Required]
         [JsonProperty("name")]
         public string Name { get; set; }
 

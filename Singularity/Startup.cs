@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using BLL.Interfaces;
 using BLL.Models;
 using BLL.Services;
+using Domain.Concrete;
 using Domain.EFContext;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Singularity.Profiles;
 
 namespace Singularity
 {
@@ -54,7 +58,16 @@ namespace Singularity
                     ValidateAudience = true,
                 };
             });
+            MapperConfiguration mc = new MapperConfiguration(c => 
+            {
+                c.AddProfile<ContentProfile>();
+                c.AddProfile<MessageProfile>();
+                c.AddProfile<UserProfile>();
+            });
+            IMapper mapper = new Mapper(mc);
+            services.AddSingleton(mapper);
             services.AddSingleton<SingularityContext, SingularityContext>();
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserManagementService, UserManagementService>();
             services.AddScoped<IAuthService, TokenAuthService>();
             services.AddScoped<IUserService, UserService>();
