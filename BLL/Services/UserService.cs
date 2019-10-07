@@ -36,7 +36,7 @@ namespace BLL.Services
                newContact != null &&
                !user.Contacts.Contains(newContact))
             {
-                user.BlackList.Add(newContact);
+                user.Contacts.Add(newContact);
                 await _db.UserRepo.Update(user);
             }
 
