@@ -19,6 +19,10 @@ namespace Domain.Interfaces
         IRepository<Video> VideoRepo { get; }
         
         IRepository<ChangedName> AllChanges { get; }
+
+        IRepository<Contact> ContactsRepos { get; }
+
+        IRepository<BlockedUser> BlockedUsers { get; }
         Task CommitAsync();
     }
 }

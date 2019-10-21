@@ -6,6 +6,7 @@ using System.Text;
 
 namespace BLL.DTOs
 {
+    [JsonObject("user")]
     public class UserDTO
     {
         [JsonProperty("id")]
@@ -32,13 +33,28 @@ namespace BLL.DTOs
         [JsonProperty("ava")]
         public ImageDTO Ava { get; set; }
 
-        [JsonProperty("contacats")]
-        public ICollection<UserDTO> Contacts { get; set; }
+        [JsonProperty("contacts")]
+        public ICollection<ContactDTO> Contacts { get; set; }
 
         [JsonProperty("blackList")]
-        public ICollection<UserDTO> BlackList { get; set; }
+        public ICollection<BlockedUserDTO> BlackList { get; set; }
 
         [JsonProperty("changes")]
         public ICollection<ChangedNameDTO> Changes { get; set; }
+
+        [JsonProperty("lastEnter")]
+        public DateTime LastEnter { get; set; }
+    }
+
+    public class BlockedUserDTO
+    {
+        public int BlockerId { get; set; }
+        public int BlockedId { get; set; }
+    }
+
+    public class ContactDTO
+    {
+        public int OwnerId { get; set; }
+        public int UserContactId { get; set; }
     }
 }

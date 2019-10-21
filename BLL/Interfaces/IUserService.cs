@@ -1,4 +1,5 @@
 ﻿using BLL.DTOs;
+using BLL.Models;
 using Domain.Interfaces;
 using Domain.Models;
 using System;
@@ -17,6 +18,7 @@ namespace BLL.Interfaces
         IEnumerable<UserDTO> GetUsers(
             Expression<Func<User, bool>> predicate);
         Task<UserDTO> GetUserByIdAsync(int id);
+        IEnumerable<UserDTO> GetUsersByIds(params int[] ids);
         Task DeleteUserAsync(UserDTO user);
         Task ChangeNameOfContact(
             int changerId, string name, int changableId);
@@ -28,6 +30,8 @@ namespace BLL.Interfaces
             int userId, int contactToDeleteId);
         Task SetAvaAsync(
             int userDTOId, ImageDTO ava);
-
+        Task SetNewToken(string userName, string token);
+        Task ChangeName(int userId, string newName);
+        Task ChangeLogin(int userId, string newLogin);
     }
 }

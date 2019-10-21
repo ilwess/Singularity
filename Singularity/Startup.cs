@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Singularity.Hubs;
 using Singularity.Profiles;
 
 namespace Singularity
@@ -33,13 +34,22 @@ namespace Singularity
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var token = Configuration.GetSection("tokenManagement").Get<TokenManagement>();
             var secret = Encoding.ASCII.GetBytes(token.Secret);
+            services.AddOptions();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+            services.Configure<TokenManagement>(Configuration);
 
             services.AddAuthentication(config =>
             {
@@ -68,13 +78,17 @@ namespace Singularity
             services.AddSingleton(mapper);
             services.AddSingleton<SingularityContext, SingularityContext>();
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IUserManagementService, UserManagementService>();
-            services.AddScoped<IAuthService, TokenAuthService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IMessageService, MessageService>();
+            services.AddSingleton<IUserManagementService, UserManagementService>();
+            services.AddSingleton<IAuthService, TokenAuthService>();
+            services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<IMessageService, MessageService>();
+            services.AddSingleton<IOnlineService, OnlineService>();
+            services.AddSignalR(cfg =>
+            {
+                cfg.EnableDetailedErrors = true;
+            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -83,13 +97,16 @@ namespace Singularity
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors("CorsPolicy");
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseHttpsRedirection();
+            app.UseSignalR(
+                routes =>
+                    routes.MapHub<MessageHub>("/message"));
             app.UseMvc();
         }
     }

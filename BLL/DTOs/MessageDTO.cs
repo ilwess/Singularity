@@ -30,5 +30,8 @@ namespace BLL.DTOs
 
         [JsonProperty("videos")]
         public ICollection<VideoDTO> VideoLink { get; set; }
+
+        [JsonProperty("date")]
+        public DateTime DateOfCreation { get; set; }
     }
 }

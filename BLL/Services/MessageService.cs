@@ -27,7 +27,9 @@ namespace BLL.Services
         public async Task CreateMessageAsync(MessageDTO messageDTO)
         {
             Message newMessage = _mapper.Map<Message>(messageDTO);
+            newMessage.Sender.Ava = null;
             await _db.MsgRepo.Create(newMessage);
+            await _db.CommitAsync();
         }
 
         public async Task DeleteMessageAsync(
@@ -71,6 +73,40 @@ namespace BLL.Services
                 _mapper.Map<IEnumerable<MessageDTO>>(
                     messages.ToList());
             return messagesDTO;
+        }
+
+        public IEnumerable<MessageDTO> GetMessagesOfUser(int userId)
+        {
+            IEnumerable<MessageDTO> messages 
+                = GetMessages(p => 
+                p.Sender.Id == userId ||
+                p.Reciever.Id == userId);
+            messages.ToList().Sort(
+                (a, b) =>
+                {
+                    if (a.DateOfCreation < b.DateOfCreation) return -1;
+                    if (a.DateOfCreation > b.DateOfCreation) return 1;
+                    return 0;
+                });
+            return messages;
+        }
+
+        public IEnumerable<MessageDTO> GetDialog(int user1Id, int user2Id)
+        {
+            IEnumerable<MessageDTO> messages
+                = GetMessages(p =>
+                (p.Sender.Id == user1Id &&
+                p.Reciever.Id == user2Id) ||
+                (p.Sender.Id == user2Id &&
+                p.Reciever.Id == user1Id)).ToList();
+            messages.ToList().Sort(
+                (a, b) =>
+                {
+                    if (a.DateOfCreation < b.DateOfCreation) return -1;
+                    if (a.DateOfCreation > b.DateOfCreation) return 1;
+                    return 0;
+                });
+            return messages;
         }
     }
 }

@@ -14,6 +14,14 @@ namespace Singularity.Profiles
         {
             CreateMap<User, UserDTO>();
             CreateMap<UserDTO, User>();
+            CreateMap<Contact, ContactDTO>()
+                .ForMember(m => m.UserContactId, cfg => cfg.MapFrom(u => u.UserContactId))
+                .ForMember(m => m.OwnerId, cfg => cfg.MapFrom(u => u.OwnerId));
+            CreateMap<ContactDTO, Contact>();
+            CreateMap<BlockedUser, BlockedUserDTO>()
+                .ForMember(m => m.BlockerId, cfg => cfg.MapFrom(u => u.BlockerId))
+                .ForMember(m => m.BlockedId, cfg => cfg.MapFrom(u => u.BlockedId));
+            CreateMap<BlockedUserDTO, BlockedUser>();
         }
     }
 }

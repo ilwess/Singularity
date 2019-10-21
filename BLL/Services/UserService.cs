@@ -33,29 +33,54 @@ namespace BLL.Services
                 _db.UserRepo.GetById(newContactDTOId);
 
             if (user != null &&
-               newContact != null &&
-               !user.Contacts.Contains(newContact))
+               newContact != null)
             {
+<<<<<<< .merge_file_a04460
                 user.Contacts.Add(newContact);
                 await _db.UserRepo.Update(user);
+=======
+                if (!user.Contacts
+                    .Any(c => c.UserContactId == newContact.Id))
+                {
+                    Contact contact = new Contact()
+                    {
+                        OwnerId = user.Id,
+                        UserContactId = newContact.Id,
+                    };
+                    user.Contacts.Add(contact);
+                    await _db.ContactsRepos.Create(contact);
+                }
+>>>>>>> .merge_file_a00480
             }
-
             await CommitAsync();
         }
 
         public async Task BlockUser(int blockerDTOId, int blockableDTOId)
         {
             User blocker = await 
-                _db.UserRepo.GetById(blockerDTOId);
+                _db.UserRepo.GetById(blockerDTOId, "Contacts", "BlackList", "Changes", "Ava");
             User blockable = await 
-                _db.UserRepo.GetById(blockableDTOId);
+                _db.UserRepo.GetById(blockableDTOId, "Contacts", "BlackList", "Changes", "Ava");
 
             if(blocker != null &&
-               blockable != null &&
-               !blocker.BlackList.Contains(blockable))
+               blockable != null)
             {
-                blocker.BlackList.Add(blockable);
-                await _db.UserRepo.Update(blocker);
+                if(blocker.BlackList == null)
+                {
+                    blocker.BlackList 
+                        = new List<BlockedUser>();
+                }
+                if (!blocker.BlackList
+                    .Any(u => u.BlockerId == blockable.Id))
+                {
+                    BlockedUser bu = new BlockedUser()
+                    {
+                        BlockedId = blockable.Id,
+                        BlockerId = blocker.Id,
+                    };
+                    blocker.BlackList.Add(bu);
+                    await _db.BlockedUsers.Create(bu);
+                }
             }
 
             await CommitAsync();
@@ -63,7 +88,7 @@ namespace BLL.Services
 
         public async Task ChangeNameOfContact(int changerDTOId, string name, int changableDTOId)
         {
-            User changer = await _db.UserRepo.GetById(changerDTOId);
+            User changer = await _db.UserRepo.GetById(changerDTOId, "Contacts", "BlackList", "Changes", "Ava");
             ChangedName change = changer
                 .Changes
                 .FirstOrDefault(c => c.Changable.Id == changableDTOId);
@@ -76,7 +101,7 @@ namespace BLL.Services
                 {
                     Changer = changer,
                     NewName = name,
-                    Changable = await _db.UserRepo.GetById(changableDTOId)
+                    Changable = await _db.UserRepo.GetById(changableDTOId, "Contacts", "BlackList", "Changes", "Ava")
                 };
                 changer.Changes.Add(change);
                 await _db.AllChanges.Create(change);
@@ -100,14 +125,21 @@ namespace BLL.Services
 
         public async Task DeleteFromContact(int userDTOId, int contactToDeleteId)
         {
-            User user = await _db.UserRepo.GetById(userDTOId);
+            User user = await _db.UserRepo.GetById(userDTOId, "Contacts", "BlackList", "Changes", "Ava");
             User contactToDel =
-                await _db.UserRepo.GetById(contactToDeleteId);
+                await _db.UserRepo.GetById(contactToDeleteId, "Contacts", "BlackList", "Changes", "Ava");
 
-            if (user.Contacts.Contains(contactToDel))
+            if (user != null &&
+                contactToDel != null)
             {
-                user.Contacts.Remove(contactToDel);
-                await _db.UserRepo.Update(user);
+                Contact contact = user.Contacts
+                    .FirstOrDefault(c => c.UserContactId ==
+                    contactToDel.Id);
+                if (contact != null)
+                {
+                    user.Contacts.Remove(contact);
+                    await _db.ContactsRepos.Delete(contact.Id);
+                }
             }
             await CommitAsync();
         }
@@ -130,7 +162,7 @@ namespace BLL.Services
         public async Task<UserDTO> GetUserByIdAsync(int id)
         {
             var user = await _db.UserRepo
-                .GetById(id);
+                .GetById(id, "Contacts", "BlackList", "Changes", "Ava");
             
             if (user != null)
             {
@@ -140,6 +172,15 @@ namespace BLL.Services
                 return null;
         }
 
+        public IEnumerable<UserDTO> GetUsersByIds(params int[] ids)
+        {
+            string[] includes = { "Contacts", "BlackList", "Changes", "Ava" };
+            var users = _db.UserRepo
+                .GetByIds(includes, ids);
+            var usersDTO = _mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(users);
+            return usersDTO;
+        }
+
         public IEnumerable<UserDTO> GetUsers(
             Expression<Func<User, bool>> predicate)
         {
@@ -147,7 +188,6 @@ namespace BLL.Services
                 .Get(predicate)
                 .Include(u => u.Changes)
                 .Include(u => u.Contacts)
-                .Include(u => u.Messages)
                 .Include(u => u.BlackList)
                 .Include(u => u.Ava);
             return _mapper.Map<
@@ -157,7 +197,7 @@ namespace BLL.Services
 
         public async Task SetAvaAsync(int userDTOId, ImageDTO ava)
         {
-            User user = await _db.UserRepo.GetById(userDTOId);
+            User user = await _db.UserRepo.GetById(userDTOId, "Contacts", "BlackList", "Changes", "Ava");
             if(user != null)
             {
                 user.Ava =_mapper.Map<Image>(ava);
@@ -165,30 +205,60 @@ namespace BLL.Services
             }
         }
 
+        public async Task SetNewToken(string userName, string token)
+        {
+            var user = GetUsers(
+                    u => u.Email == userName ||
+                    u.Login == userName ||
+                    u.Phone == userName).FirstOrDefault();
+            if (user != null)
+            {
+                user.Token = token;
+                await UpdateUser(user);
+                await CommitAsync();
+            }
+        }
+
         public async Task UnblockUser(int blockerDTOId, int blockedDTOId)
         {
             User blocker = await 
-                _db.UserRepo.GetById(blockerDTOId);
+                _db.UserRepo.GetById(blockerDTOId, "BlackList");
 
             User blocked = await
-                _db.UserRepo.GetById(blockedDTOId);
+                _db.UserRepo.GetById(blockedDTOId, "BlackList");
 
             if(blocker != null &&
                 blocked != null &&
-                blocker.BlackList.Contains(blocked))
+                blocker.BlackList
+                .Any(b => b.BlockedId == blocked.Id))
             {
-                blocker.BlackList.Remove(blocked);
-                await _db.UserRepo.Update(blocker);
+                BlockedUser bu = blocker.BlackList.FirstOrDefault(
+                    b => b.BlockedId == blocked.Id);
+                blocker.BlackList.Remove(bu);
+                await _db.BlockedUsers.Delete(bu.Id);
             }
-
             await CommitAsync();
         }
 
         public async Task UpdateUser(UserDTO user)
         {
-            User userToUpd = await _db.UserRepo.GetById(user.Id);
+            User userToUpd = _mapper.Map<UserDTO, User>(user);
             await _db.UserRepo.Update(userToUpd);
             await CommitAsync();
+        }
+
+        public async Task ChangeName(int userId, string newName)
+        {
+            User user = await _db.UserRepo.GetById(userId);
+            user.Name = newName;
+            await _db.UserRepo.Update(user);
+        }
+
+        public async Task ChangeLogin(int userId, string newLogin)
+        {
+            User user = await _db.UserRepo.GetById(userId);
+            user.Login = newLogin;
+            await _db.UserRepo.Update(user);
         }
     }
 }

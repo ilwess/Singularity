@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Domain.Migrations
 {
-    public partial class initDb : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,25 +20,11 @@ namespace Domain.Migrations
                     Phone = table.Column<string>(nullable: false),
                     Login = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    AvaId = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: true),
-                    UserId1 = table.Column<int>(nullable: true)
+                    AvaId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Users_Users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,6 +52,46 @@ namespace Domain.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BlockedUser",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    BlockerId = table.Column<int>(nullable: false),
+                    BlockedId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlockedUser", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BlockedUser_Users_BlockerId",
+                        column: x => x.BlockerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Contact",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    OwnerId = table.Column<int>(nullable: false),
+                    UserContactId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Contact", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Contact_Users_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,6 +205,16 @@ namespace Domain.Migrations
                 column: "messageId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BlockedUser_BlockerId",
+                table: "BlockedUser",
+                column: "BlockerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contact_OwnerId",
+                table: "Contact",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Images_messageId",
                 table: "Images",
                 column: "messageId");
@@ -222,16 +258,6 @@ namespace Domain.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_UserId",
-                table: "Users",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_UserId1",
-                table: "Users",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Videos_messageId",
                 table: "Videos",
                 column: "messageId");
@@ -260,6 +286,12 @@ namespace Domain.Migrations
 
             migrationBuilder.DropTable(
                 name: "Audios");
+
+            migrationBuilder.DropTable(
+                name: "BlockedUser");
+
+            migrationBuilder.DropTable(
+                name: "Contact");
 
             migrationBuilder.DropTable(
                 name: "Videos");

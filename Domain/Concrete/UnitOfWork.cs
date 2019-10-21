@@ -2,6 +2,7 @@
 using Domain.Interfaces;
 using Domain.Models;
 using Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,6 +25,10 @@ namespace Domain.Concrete
         private IRepository<Video> videoRepo;
 
         private IRepository<ChangedName> allChanges;
+
+        private IRepository<Contact> contactRepos;
+
+        private IRepository<BlockedUser> blockedUserRepos;
 
         public UnitOfWork(SingularityContext db)
         {
@@ -77,9 +82,40 @@ namespace Domain.Concrete
             }
         }
 
+        public IRepository<Contact> ContactsRepos
+        {
+            get
+            {
+                return contactRepos ??
+                    new Repository<Contact>(_db);
+            }
+        }
+
+        public IRepository<BlockedUser> BlockedUsers
+        {
+            get
+            {
+                return blockedUserRepos ??
+                    new Repository<BlockedUser>(_db);
+            }
+        }
+
         public async Task CommitAsync()
         {
-           await _db.SaveChangesAsync();
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Users ON");
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT AllChanges ON");
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Audios ON");
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Videos ON");
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Messages ON");
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Contact ON");
+
+            await _db.SaveChangesAsync();
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Users OFF");
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT AllChanges OFF");
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Audios OFF");
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Videos OFF");
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Messages OFF");
+            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Contact OFF");
         }
     }
 }
