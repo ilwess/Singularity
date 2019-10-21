@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BLL.DTOs;
 using BLL.Interfaces;
 using BLL.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -15,15 +16,19 @@ namespace Singularity.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService,
+            IUserService userService)
         {
             _authService = authService;
+            _userService = userService;
         }
 
         [AllowAnonymous]
         [HttpPost, Route("token")]
-        public async Task<ActionResult> Get([FromBody] TokenRequest request)
+        public async Task<ActionResult> Get(
+            [FromBody] TokenRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -33,7 +38,13 @@ namespace Singularity.Controllers
             string token = string.Empty;
             if(_authService.IsAuthenticate(request, out token))
             {
-                return Ok(token);
+                await _userService
+                    .SetNewToken(request.UserName, token);
+                UserDTO user = _userService.GetUsers(
+                    p => p.Email == request.UserName ||
+                    p.Phone == request.UserName)
+                    .FirstOrDefault();
+                return Ok(user);
             }
 
             return Ok();

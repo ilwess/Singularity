@@ -1,5 +1,6 @@
 ﻿using BLL.Interfaces;
 using BLL.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,10 +18,10 @@ namespace BLL.Services
 
         public TokenAuthService(
             IUserManagementService userManagementService,
-            IOptions<TokenManagement> tokenManagement)
+            IConfiguration config)
         {
             _userManagementService = userManagementService;
-            _tokenManagement = tokenManagement.Value;
+            _tokenManagement = config.GetSection("tokenManagement").Get<TokenManagement>();
         }
         public bool IsAuthenticate(TokenRequest request, out string token)
         {

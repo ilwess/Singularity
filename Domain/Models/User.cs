@@ -12,6 +12,7 @@ namespace Domain.Models
     public class User : IEntity
     {
         [JsonProperty("id")]
+        [Key]
         public int Id { get; set; }
 
         [JsonProperty("token")]
@@ -44,19 +45,27 @@ namespace Domain.Models
         public ICollection<Contact> Contacts { get; set; }
 
         [JsonProperty("blackList")]
-        public ICollection<User> BlackList { get; set; }
+        public ICollection<BlockedUser> BlackList { get; set; }
 
         [JsonProperty("changes")]
         public ICollection<ChangedName> Changes { get; set; }
 
-        [JsonProperty("messages")]
-        public ICollection<Message> Messages { get; set; }
+        [JsonProperty("lastEnter")]
+        public DateTime LastEnter { get; set; }
     }
 
     [JsonObject("contact")]
-    public class Contact
+    public class Contact : IEntity
     { 
-        public User Owner { get; set; }
-        public User UserContact { get; set; }
+        public int Id { get; set; }
+        public int OwnerId { get; set; }
+        public int UserContactId { get; set; }
+    }
+
+    public class BlockedUser : IEntity
+    {
+        public int Id { get; set; }
+        public int BlockerId { get; set; }
+        public int BlockedId { get; set; }
     }
 }

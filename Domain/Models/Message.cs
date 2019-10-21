@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Domain.Models
@@ -9,7 +11,12 @@ namespace Domain.Models
     [JsonObject("message")]
     public class Message : IEntity
     {
+        public Message()
+        {
+            DateOfCreation = DateTime.Now;
+        }
         [JsonProperty("id")]
+        [Key]
         public int Id { get; set; }
 
         [JsonProperty("sender")]
@@ -22,6 +29,7 @@ namespace Domain.Models
         public string Text { get; set; }
 
         [JsonProperty("message")]
+        [ForeignKey("SharedMessageId")]
         public Message SharedMessage { get; set; }
 
         [JsonProperty("images")]

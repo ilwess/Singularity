@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20191005114946_initDb.cs" />
+    <Compile Remove="Migrations\20191005114946_initDb.Designer.cs" />
+    <Compile Remove="Migrations\20191011105516_contactAndBlockedUser.cs" />
+    <Compile Remove="Migrations\20191011105516_contactAndBlockedUser.Designer.cs" />
+    <Compile Remove="Migrations\20191011112339_onlyId.cs" />
+    <Compile Remove="Migrations\20191011112339_onlyId.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6">

@@ -13,7 +13,7 @@ namespace Domain.Interfaces
         IQueryable<TEntity> GetAll();
         IQueryable<TEntity> Get(
             Expression<Func<TEntity, bool>> predicate);
-        Task<TEntity> GetById(int id);
+        Task<TEntity> GetById(int id, params string[] includes);
         Task Create(TEntity entity);
         Task Delete(int id);
         Task Update(TEntity entity);

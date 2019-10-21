@@ -36,6 +36,23 @@ namespace Domain.Migrations
                     b.ToTable("Audios");
                 });
 
+            modelBuilder.Entity("Domain.Models.BlockedUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BlockedId");
+
+                    b.Property<int>("BlockerId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlockerId");
+
+                    b.ToTable("BlockedUser");
+                });
+
             modelBuilder.Entity("Domain.Models.ChangedName", b =>
                 {
                     b.Property<int>("Id")
@@ -55,6 +72,23 @@ namespace Domain.Migrations
                     b.HasIndex("ChangerId");
 
                     b.ToTable("AllChanges");
+                });
+
+            modelBuilder.Entity("Domain.Models.Contact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("OwnerId");
+
+                    b.Property<int>("UserContactId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Contact");
                 });
 
             modelBuilder.Entity("Domain.Models.Image", b =>
@@ -126,10 +160,6 @@ namespace Domain.Migrations
 
                     b.Property<string>("Token");
 
-                    b.Property<int?>("UserId");
-
-                    b.Property<int?>("UserId1");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AvaId");
@@ -142,10 +172,6 @@ namespace Domain.Migrations
 
                     b.HasIndex("Phone")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Users");
                 });
@@ -174,6 +200,14 @@ namespace Domain.Migrations
                         .HasForeignKey("messageId");
                 });
 
+            modelBuilder.Entity("Domain.Models.BlockedUser", b =>
+                {
+                    b.HasOne("Domain.Models.User")
+                        .WithMany("BlackList")
+                        .HasForeignKey("BlockerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Domain.Models.ChangedName", b =>
                 {
                     b.HasOne("Domain.Models.User", "Changable")
@@ -183,6 +217,14 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.User", "Changer")
                         .WithMany("Changes")
                         .HasForeignKey("ChangerId");
+                });
+
+            modelBuilder.Entity("Domain.Models.Contact", b =>
+                {
+                    b.HasOne("Domain.Models.User")
+                        .WithMany("Contacts")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.Models.Image", b =>
@@ -199,7 +241,7 @@ namespace Domain.Migrations
                         .HasForeignKey("RecieverId");
 
                     b.HasOne("Domain.Models.User", "Sender")
-                        .WithMany("Messages")
+                        .WithMany()
                         .HasForeignKey("SenderId");
 
                     b.HasOne("Domain.Models.Message", "SharedMessage")
@@ -212,14 +254,6 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.Image", "Ava")
                         .WithMany()
                         .HasForeignKey("AvaId");
-
-                    b.HasOne("Domain.Models.User")
-                        .WithMany("Contacts")
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("Domain.Models.User")
-                        .WithMany("BlackList")
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Domain.Models.Video", b =>

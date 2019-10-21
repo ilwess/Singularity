@@ -17,5 +17,8 @@ namespace BLL.Interfaces
         IEnumerable<MessageDTO> GetAllMessages();
         IEnumerable<MessageDTO> GetMessages(
             Expression<Func<Message, bool>> predic);
+
+        IEnumerable<MessageDTO> GetMessagesOfUser(int userId);
+        IEnumerable<MessageDTO> GetDialog(int user1Id, int user2Id);
     }
 }

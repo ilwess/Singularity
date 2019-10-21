@@ -18,13 +18,16 @@ namespace Domain.EFContext
         
         public DbSet<Video> Videos { get; set; }
 
+        public DbSet<Contact> Contact { get; set; }
+        public DbSet<BlockedUser> BlockedUser { get; set; }
+
         public DbSet<ChangedName> AllChanges { get; set; }
 
         
 
         public SingularityContext()
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,8 +36,6 @@ namespace Domain.EFContext
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Contact>()
-                .HasKey(c => new { c.Owner, c.UserContact });
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
@@ -44,14 +45,13 @@ namespace Domain.EFContext
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Login)
                 .IsUnique();
-
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Contacts)
+                .WithOne().HasForeignKey(u => u.OwnerId);
 
             modelBuilder.Entity<User>()
-                .HasMany(u => u.BlackList);
-
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Messages)
-                .WithOne(m => m.Sender);
+                .HasMany(u => u.BlackList)
+                .WithOne().HasForeignKey(u => u.BlockerId);
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Changes)

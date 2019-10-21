@@ -1,4 +1,5 @@
 ﻿using BLL.DTOs;
+using BLL.Models;
 using Domain.Interfaces;
 using Domain.Models;
 using System;
@@ -28,6 +29,8 @@ namespace BLL.Interfaces
             int userId, int contactToDeleteId);
         Task SetAvaAsync(
             int userDTOId, ImageDTO ava);
-
+        Task SetNewToken(string userName, string token);
+        Task ChangeName(int userId, string newName);
+        Task ChangeLogin(int userId, string newLogin);
     }
 }
