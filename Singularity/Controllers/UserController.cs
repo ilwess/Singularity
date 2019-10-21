@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTOs;
 using BLL.Interfaces;
+using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +32,7 @@ namespace Singularity.Controllers
             _mapper = mapper;
             _online = online;
         }
-
+        [AllowAnonymous]
         [HttpPost, Route("register")]
         public async Task<IActionResult> CreateUser(UserDTO newUser)
         {
@@ -77,6 +79,18 @@ namespace Singularity.Controllers
             return Ok(user);
         }
 
+        [HttpGet, Route("getByIds")]
+        public async Task <IActionResult> Get(params int[] ids)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid Request");
+            }
+            IEnumerable<UserDTO> users = _userService
+                .GetUsersByIds(ids);
+            return Ok(users);
+        }
+
         [HttpGet, Route("messages")]
         public IActionResult GetUserMessages(int id)
         {
@@ -112,7 +126,7 @@ namespace Singularity.Controllers
             return Ok(users);
         }
 
-        [HttpPatch, Route("contact/add")]
+        [HttpPatch, Route("contactAdd")]
         public async Task<IActionResult> AddToContacts(
             int userId, int newContactId)
         {
@@ -126,7 +140,7 @@ namespace Singularity.Controllers
             return Ok();
         }
 
-        [HttpPatch, Route("contact/del")]
+        [HttpPatch, Route("contactDel")]
         public async Task<IActionResult> DelFromCotacts(
             int userId, int contactToDelId)
         {
@@ -139,7 +153,7 @@ namespace Singularity.Controllers
             return Ok();
         }
 
-        [HttpPatch, Route("blacklist/add")]
+        [HttpPatch, Route("blacklistAdd")]
         public async Task<IActionResult> AddToBlacklist(
             int userId, int blockableId)
         {
@@ -152,7 +166,7 @@ namespace Singularity.Controllers
             return Ok();
         }
 
-        [HttpPatch, Route("blacklist/del")]
+        [HttpPatch, Route("blacklistDel")]
         public async Task<IActionResult> DelFromBlacklist(
             int userId, int blockedId)
         {
@@ -178,7 +192,7 @@ namespace Singularity.Controllers
             return Ok();
         }
 
-        [HttpPatch, Route("change/name")]
+        [HttpPatch, Route("changeName")]
         public async Task<IActionResult> ChangeName
             (int id, string newName)
         {
@@ -190,7 +204,7 @@ namespace Singularity.Controllers
             return Ok();
         }
 
-        [HttpPatch, Route("change/login")]
+        [HttpPatch, Route("changeLogin")]
         public async Task<IActionResult> ChangeLogin
             (int id, string newLogin)
         {

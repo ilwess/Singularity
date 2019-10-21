@@ -18,6 +18,7 @@ namespace BLL.Interfaces
         IEnumerable<UserDTO> GetUsers(
             Expression<Func<User, bool>> predicate);
         Task<UserDTO> GetUserByIdAsync(int id);
+        IEnumerable<UserDTO> GetUsersByIds(params int[] ids);
         Task DeleteUserAsync(UserDTO user);
         Task ChangeNameOfContact(
             int changerId, string name, int changableId);

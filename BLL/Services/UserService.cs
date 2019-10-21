@@ -113,7 +113,6 @@ namespace BLL.Services
 
         public async Task CreateUserAsync(UserDTO user)
         {
-            var img = await _db.ImgRepo.GetById(1);
             User newUser = _mapper.Map<UserDTO, User>(user);
             await _db.UserRepo.Create(newUser);
             await CommitAsync();
@@ -168,6 +167,15 @@ namespace BLL.Services
                 return null;
         }
 
+        public IEnumerable<UserDTO> GetUsersByIds(params int[] ids)
+        {
+            string[] includes = { "Contacts", "BlackList", "Changes", "Ava" };
+            var users = _db.UserRepo
+                .GetByIds(includes, ids);
+            var usersDTO = _mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(users);
+            return usersDTO;
+        }
+
         public IEnumerable<UserDTO> GetUsers(
             Expression<Func<User, bool>> predicate)
         {
@@ -201,7 +209,7 @@ namespace BLL.Services
             if (user != null)
             {
                 user.Token = token;
-
+                await UpdateUser(user);
                 await CommitAsync();
             }
         }
@@ -229,7 +237,7 @@ namespace BLL.Services
 
         public async Task UpdateUser(UserDTO user)
         {
-            User userToUpd = await _db.UserRepo.GetById(user.Id);
+            User userToUpd = _mapper.Map<UserDTO, User>(user);
             await _db.UserRepo.Update(userToUpd);
             await CommitAsync();
         }

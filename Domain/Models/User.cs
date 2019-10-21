@@ -39,6 +39,7 @@ namespace Domain.Models
         public string Name { get; set; }
 
         [JsonProperty("ava")]
+        [ForeignKey("avaId")]
         public Image Ava { get; set; }
 
         [JsonProperty("contacts")]
@@ -49,9 +50,6 @@ namespace Domain.Models
 
         [JsonProperty("changes")]
         public ICollection<ChangedName> Changes { get; set; }
-
-        [JsonProperty("lastEnter")]
-        public DateTime LastEnter { get; set; }
     }
 
     [JsonObject("contact")]

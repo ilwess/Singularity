@@ -28,12 +28,11 @@ namespace Singularity.Hubs
             {
                 await Clients.User(_onlineService
                     .GetConnId(msg.Reciever.Id))
-                    .SendAsync("Recieve", msg);
-                await Clients.User(_onlineService
-                    .GetConnId(msg.Sender.Id))
-                    .SendAsync("Recieve", msg);
+                    .SendAsync("Send", msg);
             }
-            await _messageService.CreateMessageAsync(msg);
+            await Clients.Caller
+                    .SendAsync("Send", msg);
+            //await _messageService.CreateMessageAsync(msg);
         }
 
         public override async Task OnConnectedAsync()

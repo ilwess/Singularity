@@ -48,7 +48,9 @@ namespace Domain.EFContext
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Contacts)
                 .WithOne().HasForeignKey(u => u.OwnerId);
-
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Ava)
+                .WithOne(u => u.user);
             modelBuilder.Entity<User>()
                 .HasMany(u => u.BlackList)
                 .WithOne().HasForeignKey(u => u.BlockerId);

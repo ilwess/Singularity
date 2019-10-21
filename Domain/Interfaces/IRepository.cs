@@ -17,5 +17,6 @@ namespace Domain.Interfaces
         Task Create(TEntity entity);
         Task Delete(int id);
         Task Update(TEntity entity);
+        IQueryable<TEntity> GetByIds(string[] includes, params int[] ids);
     }
 }

@@ -20,5 +20,9 @@ namespace Domain.Abstracts
 
         [JsonProperty("message")]
         public Message message { get; set; }
+
+        [JsonProperty("user")]
+        public User user { get; set; }
+
     }
 }

@@ -27,6 +27,7 @@ namespace BLL.Services
         public async Task CreateMessageAsync(MessageDTO messageDTO)
         {
             Message newMessage = _mapper.Map<Message>(messageDTO);
+            newMessage.Sender.Ava = null;
             await _db.MsgRepo.Create(newMessage);
             await _db.CommitAsync();
         }
