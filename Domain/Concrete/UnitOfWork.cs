@@ -102,20 +102,7 @@ namespace Domain.Concrete
 
         public async Task CommitAsync()
         {
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Users ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT AllChanges ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Audios ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Videos ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Messages ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Contact ON");
-
             await _db.SaveChangesAsync();
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Users OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT AllChanges OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Audios OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Videos OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Messages OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Contact OFF");
         }
     }
 }

@@ -21,39 +21,15 @@ namespace Domain.Repositories
         }
         public async Task Create(TEntity entity)
         {
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Users ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT AllChanges ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Audios ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Videos ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Messages ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Contact ON");
             await _db.Set<TEntity>().AddAsync(entity);
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Users OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT AllChanges OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Audios OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Videos OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Messages OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Contact OFF");
         }
 
         public async Task Delete(int id)
         {
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Users ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT AllChanges ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Audios ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Videos ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Messages ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Contact ON");
             TEntity entity =
                 await _db.Set<TEntity>().AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == id);
             _db.Set<TEntity>().Remove(entity);
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Users OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT AllChanges OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Audios OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Videos OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Messages OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Contact OFF");
 
         }
 
@@ -96,26 +72,9 @@ namespace Domain.Repositories
 
         public async Task Update(TEntity entity)
         {
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Users ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT AllChanges ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Audios ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Videos ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Messages ON");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Contact ON");
-
-            if (_db.Attach(entity).State == EntityState.Detached)
-            {
-                _db.Attach(entity).State = EntityState.Modified;
-            }
+            _db.Attach(entity).State = EntityState.Modified;
             _db.SaveChanges();
             _db.Attach(entity).State = EntityState.Detached;
-            _db.SaveChanges();
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Users OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT AllChanges OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Audios OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Videos OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Messages OFF");
-            this._db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT Contact OFF");
         }
     }
 }
