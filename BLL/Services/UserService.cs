@@ -35,12 +35,12 @@ namespace BLL.Services
             if (user != null &&
                newContact != null)
             {
-<<<<<<< .merge_file_a04460
-                user.Contacts.Add(newContact);
-                await _db.UserRepo.Update(user);
-=======
-                if (!user.Contacts
-                    .Any(c => c.UserContactId == newContact.Id))
+                if(user.Contacts == null)
+                {
+                    user.Contacts = new List<Contact>();
+                }
+                if (user.Contacts
+                    .FirstOrDefault(c => c.UserContactId == newContact.Id) == null)
                 {
                     Contact contact = new Contact()
                     {
@@ -50,7 +50,6 @@ namespace BLL.Services
                     user.Contacts.Add(contact);
                     await _db.ContactsRepos.Create(contact);
                 }
->>>>>>> .merge_file_a00480
             }
             await CommitAsync();
         }
@@ -70,8 +69,8 @@ namespace BLL.Services
                     blocker.BlackList 
                         = new List<BlockedUser>();
                 }
-                if (!blocker.BlackList
-                    .Any(u => u.BlockerId == blockable.Id))
+                if (blocker.BlackList
+                    .FirstOrDefault(u => u.BlockerId == blockable.Id) == null)
                 {
                     BlockedUser bu = new BlockedUser()
                     {
